@@ -75,3 +75,54 @@ body {
     transform: scale(1.1);
   }
 }
+
+.popup {
+  position: absolute;
+  width: 315px;
+  height: 315px;
+  border-radius: 45px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, .5);
+  display: none;
+  justify-content: center;
+  flex-wrap: wrap;
+  box-shadow: 0 0 15px 0 rgba(255,255,255,.5);
+}
+
+.popup .title {
+  width: 100%;
+  text-align: center;
+  margin: 16px 0 0 0;
+  font-size: 2em;
+  color: #f5d700;
+}
+
+.popup .endTime {
+  color: #00cd00;
+  text-align: center;
+  width: 100%;
+  margin: 32px 0 0 0;
+  font-size: 3em;
+}
+
+.popup .bottom {
+  width: 100%;
+  text-align: center;
+}
+
+.popup .bottom p {
+  font-size: 20px;
+  color: #8d66bf;
+}
+
+.popup .bottom button {
+  color: #fff;
+  width: 145.5px;
+  height: 62.5px;
+  background: url('../img/play.png');
+  background-size: cover;
+  border: 0;
+  outline: none;
+}
