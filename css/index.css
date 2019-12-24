@@ -3,6 +3,7 @@ body {
   height: 100vh;
   overflow: hidden;
   background: linear-gradient(90deg, #a1d56d, #63b8d3);
+  position: relative;
 }
 
 .container {
@@ -17,7 +18,7 @@ body {
   width: 512px;
   height: 768px;
   background: #000 url('../img/bg.jpg') no-repeat center center;
-  background-size: contain;
+  background-size: cover;
   position: relative;
   box-shadow: 1px 0 30px 1px rgba(0, 0, 0, .5);
 }
@@ -88,7 +89,7 @@ body {
   display: none;
   justify-content: center;
   flex-wrap: wrap;
-  box-shadow: 0 0 15px 0 rgba(255,255,255,.5);
+  box-shadow: 0 0 15px 0 rgba(255, 255, 255, .8);
 }
 
 .popup .title {
@@ -125,4 +126,22 @@ body {
   background-size: cover;
   border: 0;
   outline: none;
+}
+
+@media (max-width: 1070px) {
+  .explain {
+    transform: scale(1.2);
+    margin-left: 5%;
+  }
+}
+
+@media (max-width: 880px) {
+  .container .game {
+    width: 100%;
+    height: 100%;
+  }
+
+  .explain {
+    display: none;
+  }
 }

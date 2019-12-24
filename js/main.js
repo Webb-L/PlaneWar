@@ -1,14 +1,14 @@
+alert("如果屏幕大小改变了，请刷新网页！");
 const start = document.querySelector('.start');
 // 开始按钮注册点击事件
 start.onclick = function (e) {
-  this.remove();
+  this.style.display = 'none';
   document.querySelector('.game header').style.visibility = 'visible';
   const game = new Game();
   game.init();
 };
 
 let Game = function () {
-
 };
 
 // 初始化游戏
@@ -24,7 +24,8 @@ Game.prototype.init = function () {
   this.createTime = 1000;
   // 敌方飞机移动时间（毫秒）
   this.movingTime = 800;
-  //
+
+  // 定时器
   this.TimingInterval;
   this.OurEnemyPlaneCollidedTime;
   this.BulletEnemyCollisionTime;
@@ -44,6 +45,9 @@ Game.prototype.init = function () {
 
   // 我方飞机信息
   this.me = {x: 0, y: 0, width: 0, height: 0};
+
+  // 游戏是否结束
+  this.gameOverFlag = false;
 
   this.timing();
   this.randomPlane();
@@ -69,9 +73,7 @@ Game.prototype.randomPlane = function () {
     img.src = '../img/e' + type + '.png';
     img.setAttribute('data-type', type);
     img.setAttribute('class', 'enemy');
-    img.style.position = 'absolute';
-    img.style.border = "1px solid red";
-    img.style.top = "-80px";
+    img.style.cssText = `position:absolute; border:1px solid red; top:-80px`;
     if (img.complete) {
       img.style.left = Math.floor(Math.random() * (that.width - img.width)) + 'px';
       img.style.width = img.width + 'px';
@@ -98,9 +100,7 @@ Game.prototype.airplaneMovement = function (img) {
     y += 5;
     img.style.top = y + 'px';
     if (y >= this.height + (h * 2)) {
-      img.remove();
       clearInterval(time);
-      console.log(img.getAttribute('data-type'));
       switch (img.getAttribute('data-type')) {
         case '1':
           this.fraction.innerText = parseInt(this.fraction.innerText) - (parseInt(img.getAttribute('data-type')) * 10) * 5;
@@ -115,6 +115,7 @@ Game.prototype.airplaneMovement = function (img) {
           this.gameOver();
           break;
       }
+      img.remove();
     }
   }, 1000 / 60)
 };
@@ -124,12 +125,7 @@ Game.prototype.ourPlane = function () {
   let div = document.createElement("div"), img = new Image(), that = this;
   img.src = '../img/me.png';
   img.style.display = 'none';
-  div.style.position = 'absolute';
-  div.style.top = 0;
-  div.style.zIndex = '10';
-  div.style.backgroundImage = "url(" + img.src + ")";
-  div.style.cursor = "cell";
-  div.style.border = "1px solid blue";
+  div.style.cssText = `position:absolute; top:0; zIndex:10; background-image:url('${img.src}'); cursor:cell; border: 1px solid blue;`;
   div.setAttribute('class', 'ourPlane');
 
   if (img.complete) {
@@ -224,11 +220,12 @@ Game.prototype.bulletLaunch = function (div) {
     let y = parseInt(this.style.top);
     let bullet = new Image();
     bullet.src = '../img/b.png';
-    bullet.style.position = 'absolute';
-    bullet.style.top = y + that.me.height + 'px';
-    bullet.style.left = (x + that.me.width / 2) + 'px';
-    bullet.style.zIndex = 1;
-    bullet.style.border = "1px solid yellow";
+    bullet.style.cssText = `position:absolute; top:${y + that.me.height}px; left:${x + that.me.width / 2}px; zIndex:1; border:1px solid yellow;`;
+    // bullet.style.position = 'absolute';
+    // bullet.style.top = y + that.me.height + 'px';
+    // bullet.style.left = (x + that.me.width / 2) + 'px';
+    // bullet.style.zIndex = 1;
+    // bullet.style.border = "1px solid yellow";
     bullet.setAttribute('class', 'bullet');
     that.gameRegion.appendChild(bullet);
     that.bulletMovement(bullet);
@@ -248,10 +245,15 @@ Game.prototype.bulletMovement = function (bullet) {
 };
 // 游戏结束
 Game.prototype.gameOver = function () {
-  if (this.fraction.innerText <= 0) {
-    document.querySelector('.popup').style.display = 'flex';
-    document.querySelector('.popup .endTime').innerText = this.time.innerText;
+  if (this.gameOverFlag) return;
+  this.gameOverFlag = true;
 
+
+  if (this.fraction.innerText <= 0) {
+    let popup = document.querySelector('.popup');
+    popup.style.display = 'flex';
+    document.querySelector('.popup .endTime').innerText = this.time.innerText;
+    // 判断段位
     if (this.time.innerText <= 30) {
       document.querySelector('.popup .rank').innerText = "倔强青铜";
     } else if (30 < this.time.innerText && this.time.innerText <= 60) {
@@ -271,11 +273,23 @@ Game.prototype.gameOver = function () {
       e.remove();
     });
     document.querySelectorAll('.enemy').forEach(e => {
+      e.setAttribute('data-type', '0');
       e.remove();
     });
     clearInterval(this.TimingInterval);
     clearInterval(this.OurEnemyPlaneCollidedTime);
     clearInterval(this.BulletEnemyCollisionTime);
     clearInterval(this.randomPlaneTime);
+    let comeAgain = document.querySelector('.comeAgain');
+    comeAgain.onclick = () => {
+      if (this.gameOverFlag) {
+        document.querySelector('.popup').style.display = 'none';
+        this.time.innerText = 0;
+        this.fraction.innerText = '0';
+        this.gameOverFlag = false;
+        popup.style.display = 'none';
+        start.style.display = 'flex';
+      }
+    };
   }
 };
