@@ -116,7 +116,7 @@ Game.prototype.ourPlane = function () {
   let div = document.createElement("div"), img = new Image(), that = this;
   img.src = '../img/me.png';
   img.style.display = 'none';
-  div.style.cssText = `position:absolute; top:80%; left:50%; transform: translateX(-50%); zIndex:10; background-image:url('${img.src}'); cursor:cell; border: 1px solid blue;`;
+  div.style.cssText = `position:absolute; top:80%; left:50%; zIndex:10; background-image:url('${img.src}'); cursor:cell; border: 1px solid blue;`;
   div.setAttribute('class', 'ourPlane');
 
   if (img.complete) {
