@@ -22,8 +22,6 @@ Game.prototype.init = function () {
 
   // 创建敌方飞机时间（毫秒）
   this.createTime = 1000;
-  // 敌方飞机移动时间（毫秒）
-  this.movingTime = 800;
 
   // 定时器
   this.TimingInterval;
@@ -35,13 +33,6 @@ Game.prototype.init = function () {
   this.width = this.gameRegion.clientWidth;
   // 游戏区域高度
   this.height = this.gameRegion.clientHeight;
-
-  // 白色飞机分数
-  this.whitePlane = 10;
-  // 蓝色飞机分数
-  this.bluePlane = 20;
-  // 红色飞机分数
-  this.redPlane = 30;
 
   // 我方飞机信息
   this.me = {x: 0, y: 0, width: 0, height: 0};
@@ -125,7 +116,7 @@ Game.prototype.ourPlane = function () {
   let div = document.createElement("div"), img = new Image(), that = this;
   img.src = '../img/me.png';
   img.style.display = 'none';
-  div.style.cssText = `position:absolute; top:0; zIndex:10; background-image:url('${img.src}'); cursor:cell; border: 1px solid blue;`;
+  div.style.cssText = `position:absolute; top:80%; left:50%; transform: translateX(-50%); zIndex:10; background-image:url('${img.src}'); cursor:cell; border: 1px solid blue;`;
   div.setAttribute('class', 'ourPlane');
 
   if (img.complete) {
@@ -168,9 +159,11 @@ Game.prototype.collision = function () {
         this.me.y < parseInt(e.style.top) + e.height &&
         this.me.height + this.me.y > parseInt(e.style.top)) {
         e.remove();
+        if (e.getAttribute('data-type') != 0) {
+          this.fraction.innerText = -9999;
+          this.gameOver();
+        }
         e.setAttribute('data-type', '0');
-        this.fraction.innerText = -9999;
-        this.gameOver();
       }
     })
   }, 50);
@@ -223,11 +216,6 @@ Game.prototype.bulletLaunch = function (div) {
     let bullet = new Image();
     bullet.src = '../img/b.png';
     bullet.style.cssText = `position:absolute; top:${y + that.me.height}px; left:${x + that.me.width / 2}px; zIndex:1; border:1px solid yellow;`;
-    // bullet.style.position = 'absolute';
-    // bullet.style.top = y + that.me.height + 'px';
-    // bullet.style.left = (x + that.me.width / 2) + 'px';
-    // bullet.style.zIndex = 1;
-    // bullet.style.border = "1px solid yellow";
     bullet.setAttribute('class', 'bullet');
     that.gameRegion.appendChild(bullet);
     that.bulletMovement(bullet);
