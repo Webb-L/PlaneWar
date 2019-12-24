@@ -169,6 +169,8 @@ Game.prototype.collision = function () {
         this.me.height + this.me.y > parseInt(e.style.top)) {
         e.remove();
         e.setAttribute('data-type', '0');
+        this.fraction.innerText = -9999;
+        this.gameOver();
       }
     })
   }, 50);
